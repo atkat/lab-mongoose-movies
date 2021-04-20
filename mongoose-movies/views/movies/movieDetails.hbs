@@ -1,0 +1,20 @@
+{{#with movie}}
+
+<h1>{{title}}</h1>
+<p>Plot: {{plot}}</p>
+<p>Genre: {{genre}}</p>
+  <ul>
+    {{#each cast}}
+      <li>{{name}}</li>
+    {{/each}}
+  </ul>
+<div id='edit'>
+  <form action="/movies/{{_id}}/edit" method ="POST">
+    <button>Edit</button>
+  </form>
+  <form action="/movies/{{_id}}/delete" method ="POST">
+    <button>Delete</button>
+  </form>
+</div>
+
+{{/with}}
