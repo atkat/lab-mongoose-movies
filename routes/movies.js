@@ -7,7 +7,7 @@ const Celebrity = require("../models/Celebrity");
 router.get('/', (req, res, next) =>{
   Movie.find()
     .then(allMovies => {
-      console.log(allMovies);
+      //console.log(allMovies);
       res.render('movies', {allMovies});
     })
     .catch(err => next(err))
@@ -26,7 +26,6 @@ router.get('/:id', (req, res, next) => {
   Movie.findById(req.params.id)
     .populate('cast')
     .then(movie => { 
-    console.log(movie);
     res.render('movies/movieDetails', {movie});
   })
   .catch(err=>next(err))
@@ -44,12 +43,10 @@ router.post('/new', (req, res, next) => {
   const {title, genre, plot, cast} = req.body;
   Movie.create( {title, genre, plot, cast} )
     .then(newMovie => {
-      console.log(`Hey new addition ${newMovie}!`);
       res.redirect(`/movies/${newMovie._id}`)
     })
     .catch(() => res.render('movies/new'))
 })
-
 //EDIT
 router.post('/:id/edit', (req, res, next) => {
   const {title, genre, plot, cast} = req.body;
@@ -71,17 +68,3 @@ router.post('/:id/delete', (req, res, next) => {
 })
 
 module.exports = router;
-
-// //test
-// router.post('/:id', (req, res, next) => {
-//   const { name, occupation, catchPhrase } = req.body;
-//   Book.findByIdAndUpdate(req.params.id, {
-//     $push: { cast: {name, occupation, catchPhrase } }
-//   })
-//     .then(() => {
-//       res.redirect(`/movieDetails/${req.params.id}`);
-//     })
-//     .catch(err => {
-//       next(err);
-//     })
-// })
