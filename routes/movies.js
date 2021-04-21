@@ -33,11 +33,15 @@ router.get('/:id', (req, res, next) => {
 //EDIT
 router.get('/:id/edit', (req, res, next) => {
   Movie.findById(req.params.id)
+    .populate('cast')
     .then(movie => {
-      res.render('movies/edit', { movie });
+      Celebrity.find()
+      .then(casr => {
+      res.render('movies/edit', {movie, cast});
     })
     .catch(err => next(err))
-});
+  })
+})
 //ADD
 router.post('/new', (req, res, next) => {
   const {title, genre, plot, cast} = req.body;
@@ -61,7 +65,6 @@ router.post('/:id/edit', (req, res, next) => {
 router.post('/:id/delete', (req, res, next) => {
   Movie.findByIdAndDelete(req.params.id)
   .then( () => {
-    //console.log(`Sorry, you got deleted!`);
     res.redirect(`/movies`)
   })
   .catch(err=> new(err))
