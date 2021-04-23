@@ -7,7 +7,6 @@ const Celebrity = require("../models/Celebrity");
 router.get('/', (req, res, next) =>{
   Movie.find()
     .then(allMovies => {
-      //console.log(allMovies);
       res.render('movies', {allMovies});
     })
     .catch(err => next(err))
@@ -18,17 +17,20 @@ router.get('/new', (req, res, next) => {
   .then(celebrity => {
     res.render('movies/new', {celebrity})
   })
-  .catch(err=>new(err))
+  .catch(err => new(err))
 });
 //DETAILS
 router.get('/:id', (req, res, next) => {  
   console.log(req.body);
   Movie.findById(req.params.id)
     .populate('cast')
-    .then(movie => { 
-    res.render('movies/movieDetails', {movie});
-  })
+    .then(movie => {
+      Celebrity.find()
+      .then(cast => {
+      res.render('movies/movieDetails', {movie, cast});
+    })
   .catch(err=>next(err))
+  })
 })
 //EDIT
 router.get('/:id/edit', (req, res, next) => {
@@ -36,12 +38,12 @@ router.get('/:id/edit', (req, res, next) => {
     .populate('cast')
     .then(movie => {
       Celebrity.find()
-      .then(casr => {
+      .then(cast => {
       res.render('movies/edit', {movie, cast});
     })
     .catch(err => next(err))
   })
-})
+});
 //ADD
 router.post('/new', (req, res, next) => {
   const {title, genre, plot, cast} = req.body;
@@ -56,12 +58,12 @@ router.post('/:id/edit', (req, res, next) => {
   const {title, genre, plot, cast} = req.body;
   Movie.findByIdAndUpdate(req.params.id, {title, genre, plot, cast})
   .then( movie => {
-    console.log('THIS IS ME:'+movie._id);
     res.redirect(`/movies/${movie._id}`)
   })
   .catch(err=> new(err))
 });
 //DELETE
+
 router.post('/:id/delete', (req, res, next) => {
   Movie.findByIdAndDelete(req.params.id)
   .then( () => {
